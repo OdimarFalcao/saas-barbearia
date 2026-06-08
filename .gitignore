@@ -1,0 +1,45 @@
+# === Segredos / ambiente ===
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+secrets/
+
+# === Java / Maven (backend) ===
+backend/target/
+backend/.mvn/
+!backend/.mvn/wrapper/maven-wrapper.properties
+*.class
+*.jar
+*.war
+hs_err_pid*
+
+# === Node / React (frontend) ===
+frontend/node_modules/
+frontend/dist/
+frontend/.vite/
+npm-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# === IDE / SO ===
+.idea/
+*.iml
+.vscode/*
+!.vscode/extensions.json
+!.vscode/settings.json.example
+.DS_Store
+Thumbs.db
+
+# === Banco / Docker ===
+*.sqlite
+*.db
+pgdata/
+docker-data/
+
+# === Logs / temporários ===
+*.log
+logs/
+tmp/
+coverage/
