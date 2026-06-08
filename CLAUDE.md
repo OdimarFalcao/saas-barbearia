@@ -19,7 +19,7 @@ SaaS de gestão para **uma barbearia cliente** (single-tenant) com **clube de as
 
 ## 2. Stack
 
-- **Backend:** Java 21 · Spring Boot 3 (Web, Security, Data JPA, Validation) · PostgreSQL 16 · Flyway · Maven · springdoc-openapi.
+- **Backend:** Java 21 · Spring Boot 4 (Web, Security, Data JPA, Validation) · PostgreSQL 16 · Flyway · **Gradle (Kotlin DSL)** · springdoc-openapi.
 - **Frontend:** React 18 · TypeScript · Vite · Tailwind · shadcn/ui · TanStack Query · React Router · React Hook Form + Zod · Axios.
 - **Pagamentos:** Asaas (recorrência + webhooks).
 - **Testes:** JUnit 5, AssertJ, Mockito, Spring Boot Test (MockMvc), Testcontainers · Vitest, React Testing Library, Playwright.

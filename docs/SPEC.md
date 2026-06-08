@@ -46,10 +46,10 @@ Pump (PU01–07), mapa de calor (DB03), dashboard estratégico (DB02), relatóri
 | Camada | Tecnologia | Justificativa |
 |---|---|---|
 | Linguagem | **Java 21 (LTS)** | Estável, tipagem forte — boa para regra financeira. |
-| Framework | **Spring Boot 3.x** (Web, Security, Data JPA, Validation) | API REST JSON. Maduro, baterias incluídas, ótimo ecossistema de testes. |
+| Framework | **Spring Boot 4.x** (Web, Security, Data JPA, Validation) | API REST JSON. Maduro, baterias incluídas, ótimo ecossistema de testes. Spring Boot 4.0.6 gerado na Etapa 4. |
 | Banco | **PostgreSQL 16** | Robusto, transacional — adequado a dinheiro. |
 | Migrations | **Flyway** | Versionamento de schema reproduzível. |
-| Build | **Maven** | Documentação ubíqua, simples para começar. |
+| Build | **Gradle (Kotlin DSL)** | Build incremental mais rápido; DSL concisa. Decidido na Etapa 4. |
 | Pagamentos | **Asaas** (recorrência + webhooks) | Brasileiro, taxas baixas, recorrência nativa e *split* (conversa com a comissão). |
 | PDF | **OpenPDF** ou **Flying Saucer** (HTML→PDF) | Relatório de comissão (AS10). |
 | Doc API | **springdoc-openapi (Swagger UI)** | Contrato da API para o front e para testes. |
@@ -213,4 +213,4 @@ TDD onde o risco é maior. **Backend** — Unidade (JUnit5/AssertJ/Mockito) para
 
 Segredos só em variáveis de ambiente (nunca no git); BCrypt; CSRF; validação de entrada; `@PreAuthorize`; `AuditLog` em ações críticas (NF03); sem dados sensíveis em log; OWASP Dependency-Check no CI; assinatura de webhook do Asaas verificada; LGPD (coleta mínima, base legal, futura gestão de consentimento).
 
-## 17. Poss�
+## 17. Poss�
