@@ -37,7 +37,7 @@ saas-barbearia/
 │  ├─ REQUISITOS.md     # o quê (requisitos do MVP)
 │  ├─ SPEC.md           # como (arquitetura, modelos, regras)
 │  ├─ AMBIENTE.md       # setup do ambiente isolado (a criar)
-│  ├─ TEST_PLAN.md      # plano de testes (a criar)
+│  ├─ TEST_PLAN.md      # plano de testes
 │  ├─ SECURITY.md       # cuidados de segurança (a criar)
 │  ├─ DEPLOY.md         # plano de publicação (a criar)
 │  └─ FUTURE.md         # ideias/itens adiados (a criar)
@@ -147,9 +147,9 @@ docker compose up
 - ✅ Etapa 2 — `SPEC.md`.
 - ✅ Documento de requisitos do MVP (`REQUISITOS.md`).
 - ✅ Manual do Claude Code (este arquivo).
-- ⬜ Etapa 3 — `AMBIENTE.md` (próximo: ambiente isolado, recomendação WSL2, .env, GitHub).
-- ⬜ Etapa 4 — arquitetura detalhada / scaffolding.
-- ⬜ Etapa 5 — `TEST_PLAN.md`.
-- ⬜ Etapas 6+ — implementação incremental, segurança, CI/CD, deploy.
+- ✅ Etapa 3 — `AMBIENTE.md` (WSL2, .env, Postgres na porta 5433, GitHub via SSH).
+- ✅ Etapa 4 — arquitetura detalhada / scaffolding (Gradle Kotlin DSL, Spring Boot 4.0.6, monorepo).
+- ✅ Etapa 5 — `TEST_PLAN.md` (casos D01–D12 do Depote, webhooks, comanda, caixa; rastreabilidade por ID).
+- ⬜ Etapas 6+ — implementação incremental (TDD), segurança, CI/CD, deploy.
 
-**Próximo passo objetivo:** criar `docs/AMBIENTE.md` e confirmar a pendência da ficha (Depote) com o piloto.
+**Próximo passo objetivo:** iniciar a Etapa 6 — primeira fatia vertical com TDD (sugestão: autenticação/perfis + migrations iniciais, base para todo o resto). Antes de implementar o Depote, fixar na SPEC a regra de arredondamento (proposta no TEST_PLAN §4.1) e resolver as pendências de `REQUISITOS.md §9`.
