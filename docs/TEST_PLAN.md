@@ -38,7 +38,7 @@
 
 ### Tooling pendente (adicionar no primeiro teste de cada tipo)
 
-- `backend/build.gradle.kts`: `org.testcontainers:postgresql` + `org.springframework.boot:spring-boot-testcontainers` (ou equivalente no Boot 4) quando o primeiro teste de integração for escrito.
+- ✅ `backend/build.gradle.kts`: `spring-boot-testcontainers` + `org.testcontainers:postgresql` (via BOM 1.21.3 — a versão não é gerenciada pelo BOM do Boot 4) adicionados na fatia de autenticação. Config compartilhada: `TestcontainersConfig` (`src/test/java/com/barbearia/common/`).
 - `frontend/package.json`: `vitest`, `@testing-library/react`, `@testing-library/jest-dom`, `jsdom` no primeiro teste de componente; `@playwright/test` no primeiro e2e. Adicionar script `"test": "vitest"`.
 
 ## 3. Convenções
@@ -118,9 +118,9 @@ A regra mais sensível do sistema — dinheiro entre parceiros. Testes de unidad
 
 ### 4.7 🟡 Segurança e acesso (CF04, NF03, §11 da SPEC)
 
-- **S01** Endpoint protegido sem sessão → 401; com perfil errado → 403 (matriz perfil × endpoint nos testes MockMvc de cada controller).
-- **S02** Login/logout/`me`: sucesso, senha errada, usuário inativo.
-- **S03** CSRF: mutação sem token → 403; com token → ok.
+- **S01** ✅ *(base em `AuthFluxoIT`; a matriz perfil × endpoint cresce com cada novo controller)* Endpoint protegido sem sessão → 401; com perfil errado → 403.
+- **S02** ✅ *(`AuthFluxoIT`)* Login/logout/`me`: sucesso, senha errada, usuário inativo, validação de DTO.
+- **S03** ✅ *(base em `AuthFluxoIT`)* CSRF: mutação sem token → 403; com token → ok.
 - **S04** PROFISSIONAL não acessa produção/comissão de outro barbeiro (menor privilégio).
 - **S05** Ações críticas (RN-03, alterar assinatura, mudar permissão) geram `AuditLog` — verificado nos testes da feature correspondente.
 

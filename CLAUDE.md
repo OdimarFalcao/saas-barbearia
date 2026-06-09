@@ -150,6 +150,8 @@ docker compose up
 - ✅ Etapa 3 — `AMBIENTE.md` (WSL2, .env, Postgres na porta 5433, GitHub via SSH).
 - ✅ Etapa 4 — arquitetura detalhada / scaffolding (Gradle Kotlin DSL, Spring Boot 4.0.6, monorepo).
 - ✅ Etapa 5 — `TEST_PLAN.md` (casos D01–D12 do Depote, webhooks, comanda, caixa; rastreabilidade por ID).
-- ⬜ Etapas 6+ — implementação incremental (TDD), segurança, CI/CD, deploy.
+- 🔨 Etapa 6 — implementação incremental (TDD), em andamento:
+  - ✅ Fatia 1 — autenticação por sessão + perfis (CF04, SPEC §11): `Usuario`/`Perfil`, V2 migration, SecurityConfig (cookie HttpOnly, CSRF cookie-to-header, BCrypt), `/api/auth/login|logout|me`, admin inicial via env. Casos S01–S03 do TEST_PLAN cobertos (`AuthFluxoIT`, `AdminInicialIT`).
+- ⬜ Próximas fatias da Etapa 6 — cadastros base, agenda, comanda/caixa, assinatura, Depote… Depois: segurança, CI/CD, deploy.
 
-**Próximo passo objetivo:** iniciar a Etapa 6 — primeira fatia vertical com TDD (sugestão: autenticação/perfis + migrations iniciais, base para todo o resto). Antes de implementar o Depote, fixar na SPEC a regra de arredondamento (proposta no TEST_PLAN §4.1) e resolver as pendências de `REQUISITOS.md §9`.
+**Próximo passo objetivo:** próxima fatia vertical (sugestão: cadastros base — serviços com fichas e barbeiros — pré-requisito de agenda e comanda). Antes de implementar o Depote, fixar na SPEC a regra de arredondamento (proposta no TEST_PLAN §4.1) e resolver as pendências de `REQUISITOS.md §9`.
