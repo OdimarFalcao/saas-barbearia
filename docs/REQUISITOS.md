@@ -1,8 +1,7 @@
 # Documento de Requisitos — MVP (Sistema de Gestão de Barbearia)
 
-> Versão 1.0 (MVP) · junho/2026
-> Refinamento do `Requisitos_Sistema_Barbearia (1).docx` (entrevista de campo, out/2025) **com base nas decisões tomadas no planejamento**.
-> Documento técnico complementar: `SPEC.md`.
+> Versão 1.1 (MVP) · 17/06/2026
+> Versão limpa com decisões atualizadas: CL01 com login próprio, AG04 push real, WhatsApp pendente. Documento técnico complementar: `SPEC.md`.
 
 ---
 
@@ -48,15 +47,15 @@ IDs herdados do documento original de requisitos.
 - **CF06** Formas de pagamento aceitas.
 
 ### 4.2 Clientes
-- **CL01** Cadastro de clientes com campo de **origem** (Instagram, indicação, Google, fachada…).
+- **CL01** Cliente cria conta com **login próprio** (mini-CRM): nome, telefone, e-mail, data de nascimento, **origem** (Instagram, indicação, Google, fachada…). Permite histórico de visitas e recompra. **[DECIDIDO 17/06/2026]**
 
 ### 4.3 Agenda e agendamentos
 > ✅ **Confirmado:** o produto terá **agenda própria** no MVP, com **autoagendamento pelo cliente** (página pública) e o **barbeiro visualizando a própria agenda**.
 
 - **AG01** Visualização da agenda por barbeiro (diária/semanal).
 - **AG02** Códigos visuais essenciais (assinante, avulso, cliente novo).
-- **AG03** Confirmação de agendamento (link ao cliente ou manual pela recepção) com ícone de status.
-- **AG04** Notificação de chegada do cliente ao barbeiro responsável.
+- **AG03** Confirmação de agendamento (link ao cliente ou manual pela recepção) com ícone de status. Ao confirmar, notificar o cliente via **WhatsApp**. [MVP — decisão técnica pendente com Isanio: API oficial Meta (paga) vs lib não-oficial (ex: Baileys)]
+- **AG04** **Push real no celular do barbeiro** responsável ao registrar chegada do cliente. **[DECIDIDO 17/06/2026]**
 - **AG05** Ações sobre o agendamento: confirmar, finalizar, excluir, registrar falta.
 - **AG06** Intervalos e folgas individuais por barbeiro como bloqueios na agenda.
 - **AG07** **Bloqueio de assinante inadimplente** até regularização.
@@ -89,6 +88,7 @@ IDs herdados do documento original de requisitos.
 - **ES01** Catálogo de produtos (nome, categoria, marca, preço, período de recompra, status).
 - **ES02** Saída automática de estoque ao fechar comanda com produto.
 - **ES03** Estoque mínimo configurável com alerta no dashboard.
+- **ES04** Histórico de movimentações — log de entradas e saídas com data, responsável e quantidade.
 
 ### 4.8 Dashboard operacional (enxuto)
 - **DB01** Visão do dia: profissionais ativos, comandas abertas, estoque mínimo, pagamentos incompletos. (Subconjunto do DB01 original.)
@@ -141,7 +141,8 @@ Módulo Pump (PU01–07), mapa de calor (DB03), dashboard estratégico (DB02), r
 ## 9. Pendências / decisões em aberto
 
 - **[RESOLVIDO] Unidade da ficha (RN-05):** ficha é **peso configurável por serviço** (ex.: corte = 40, barba = 30, pezinho = 20). Definido.
-- **[RESOLVIDO] Tratamento da agenda:** agenda **própria** no MVP, com autoagendamento do cliente (página pública) e o barbeiro vendo a própria agenda.
+- **[RESOLVIDO] Tratamento da agenda:** agenda **própria** no MVP, com autoagendamento do cliente e o barbeiro vendo a própria agenda.
+- **[RESOLVIDO 17/06/2026] Autoagendamento do cliente (CL01):** cliente cria **conta própria com login** (mini-CRM). Não é só nome/telefone.
+- **[RESOLVIDO 17/06/2026] Notificação de chegada (AG04):** **push real no celular do barbeiro** — decidido.
+- **[MVP — técnica pendente] WhatsApp ao cliente (AG03):** notificação WhatsApp na confirmação do agendamento está no MVP. Decisão técnica a resolver com Isanio: API oficial Meta (paga, aprovação necessária) vs lib não-oficial (ex: Baileys, grátis, instável para produção).
 - **[ABERTO] Comissão de avulso e produtos:** o Depote cobre só a assinatura. Falta definir como se calcula a comissão de serviços avulsos e venda de produtos (ex.: % fixo por barbeiro) que compõe o relatório AS10.
-- **[A confirmar] Autoagendamento do cliente:** o cliente agenda só com nome/telefone (sem conta) ou cria uma conta simples? E confirmação por link/WhatsApp?
-- **[A confirmar] Notificação de chegada (AG04):** push real ou atualização na tela do barbeiro.

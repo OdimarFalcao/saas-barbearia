@@ -1,13 +1,13 @@
 # SPEC.md — Sistema de Gestão de Barbearia (MVP)
 
-> Versão 0.1 — Especificação técnica do MVP. Base: `Requisitos_Sistema_Barbearia (1).docx` (entrevista de campo, out/2025).
-> Decisões fixadas: **MVP enxuto · single-tenant · cliente piloto real · backend Java/Spring Boot (API REST) · frontend React SPA desacoplado**.
+> Versão 0.2 — Especificação técnica do MVP. Atualizado em 17/06/2026 com decisões de escopo e stack definitiva.
+> Decisões fixadas: **MVP enxuto · single-tenant · cliente piloto real · backend Java/Spring Boot (API REST) · frontend React SPA desacoplado · Asaas como único gateway MVP**.
 
 ---
 
 ## 1. Visão geral
 
-SaaS de gestão para uma **barbearia cliente** que hoje só **agenda online** clientes e serviços e **não tem gestão de pagamentos, assinatura, comissão ou relatórios**. O sistema entrega exatamente essa **camada de dinheiro e informação**: gerir **recorrência, inadimplência e a distribuição justa de comissão de assinatura (Depote)**, caixa e relatórios. A entrevista com uma usuária do Cash Barber foi **benchmark de domínio** — **não** estamos substituindo o Cash Barber.
+SaaS de gestão para uma **barbearia cliente** que hoje só **agenda online** clientes e serviços e **não tem gestão de pagamentos, assinatura, comissão ou relatórios**. O sistema entrega exatamente essa **camada de dinheiro e informação**: gerir **recorrência, inadimplência e a distribuição justa de comissão de assinatura (Depote)**, caixa e relatórios. O escopo foi definido a partir de pesquisa de campo com gestoras de barbearia — os requisitos estão em `REQUISITOS.md`.
 
 O produto é **genérico e configurável** (não amarrado aos dados de nenhum cliente), pensado para ser reaproveitado em várias barbearias. Cada cliente roda a **própria instância single-tenant**; a barbearia piloto valida o MVP. Multi-tenant verdadeiro é evolução futura (ver §17).
 
@@ -22,11 +22,11 @@ Critério de sucesso: a barbearia piloto registra os atendimentos, fecha o caixa
 
 ## 3. Funcionalidades incluídas (MVP)
 
-Referência aos IDs do doc de requisitos:
+> **Fonte de verdade funcional:** `REQUISITOS.md` — descrição completa, marcações [MVP]/[FUTURO]/[DECIDIDO] e decisões de escopo. Esta seção é o checklist técnico de implementação, com referências aos IDs.
 
-- **Cadastros:** empresa (CF03), barbeiros e jornada/intervalos (CF01, AG06), serviços com fichas (CF02), formas de pagamento (CF06), clientes com origem (CL01).
+- **Cadastros:** empresa (CF03), barbeiros e jornada/intervalos (CF01, AG06), serviços com fichas (CF02), formas de pagamento (CF06), **clientes com conta própria e login (CL01) [DECIDIDO — mini-CRM: nome, telefone, e-mail, histórico de visitas e origem]**.
 - **Acesso:** autenticação e controle por perfil Admin / Recepção / Profissional (CF04, NF03).
-- **Agenda:** visão por barbeiro (AG01), códigos visuais essenciais (AG02 — assinante/avulso/novo), confirmação manual/por link (AG03), marcar chegada (AG04), ações sobre agendamento incl. falta (AG05), bloqueios de intervalo/folga (AG06), **bloqueio de inadimplente** (AG07), painel resumido do dia (AG08).
+- **Agenda:** visão por barbeiro (AG01), códigos visuais essenciais (AG02 — assinante/avulso/novo), confirmação manual/por link com **notificação WhatsApp ao cliente** (AG03) [⚠️ decisão técnica pendente com Isanio: API oficial Meta vs lib não-oficial], marcar chegada com **push real no celular do barbeiro** (AG04) [DECIDIDO], ações sobre agendamento incl. falta (AG05), bloqueios de intervalo/folga (AG06), **bloqueio de inadimplente** (AG07), painel resumido do dia (AG08).
 - **Comanda/Caixa:** abrir a partir de agendamento (CX01), desconto automático do plano (CX02), formas de pagamento (CX03), fechar comanda (CX04), histórico com filtros (CX05), **[MELHORIA] editar comanda fechada com log de auditoria** (CX06), caixa por turno (CX07), **[MELHORIA] totais agregados no caixa** (CX08), alerta de comanda aberta antiga (CX09).
 - **Assinatura:** cadastro de planos (AS01), **gateway único integrado (Asaas)** com cobrança recorrente, dashboard de assinatura (AS03), gestão de inadimplência com recobrança (AS04), limite de vagas por plano (AS07).
 - **Depote / Comissão:** cálculo de comissão por fichas (AS09) e relatório de comissão por barbeiro em PDF (AS10).
@@ -60,7 +60,7 @@ Pump (PU01–07), mapa de calor (DB03), dashboard estratégico (DB02), relatóri
 
 | Item | Tecnologia | Justificativa |
 |---|---|---|
-| Base | **React 18 + TypeScript + Vite** | Padrão moderno, build rápido, tipagem alinhada aos DTOs da API. |
+| Base | **React 19 + TypeScript + Vite** | Padrão moderno, build rápido, tipagem alinhada aos DTOs da API. |
 | Estilo/UI | **Tailwind CSS + shadcn/ui** | Componentes prontos e acessíveis — acelera muito a dupla. |
 | Dados/estado servidor | **TanStack Query** | Cache, revalidação e loading/error sem boilerplate. |
 | Rotas | **React Router** | Navegação SPA por perfil. |
@@ -191,7 +191,7 @@ Relacionamentos-chave: Cliente 1—N Assinatura 1—N Cobranca · Cliente/Barbei
 
 ## 11. Estratégia de autenticação e autorização
 
-Spring Security com **sessão por cookie HttpOnly** (`SameSite=Lax`, `Secure` em produção), senhas em **BCrypt**. SPA e API no **mesmo domínio** (via Caddy), evitando CORS e mantendo o token de sessão **inacessível ao JavaScript** — mais seguro que JWT em `localStorage`. **CSRF habilitado** (padrão cookie-to-header: o front lê o cookie `XSRF-TOKEN` e reenvia no header). Endpoints: `POST /api/auth/login`, `POST /api/auth/logout`, `GET /api/auth/me`. Três `ROLE`s (ADMIN, RECEPCAO, PROFISSIONAL) com autorização nos endpoints **e** `@PreAuthorize` em Services para ações críticas; o front apenas oculta/mostra a UI conforme o perfil (a checagem real é sempre no backend). Menor privilégio: barbeiro só vê a própria produção/comissão. A **página de autoagendamento do cliente é pública** (sem login de staff): cria agendamento pendente, com validação e *rate limiting* contra abuso. Conta de cliente é opcional e fica como evolução futura.
+Spring Security com **sessão por cookie HttpOnly** (`SameSite=Lax`, `Secure` em produção), senhas em **BCrypt**. SPA e API no **mesmo domínio** (via Caddy), evitando CORS e mantendo o token de sessão **inacessível ao JavaScript** — mais seguro que JWT em `localStorage`. **CSRF habilitado** (padrão cookie-to-header: o front lê o cookie `XSRF-TOKEN` e reenvia no header). Endpoints: `POST /api/auth/login`, `POST /api/auth/logout`, `GET /api/auth/me`. Três `ROLE`s (ADMIN, RECEPCAO, PROFISSIONAL) com autorização nos endpoints **e** `@PreAuthorize` em Services para ações críticas; o front apenas oculta/mostra a UI conforme o perfil (a checagem real é sempre no backend). Menor privilégio: barbeiro só vê a própria produção/comissão. O **autoagendamento exige cadastro e login do cliente** (conta própria — mini-CRM): nome, telefone, e-mail e origem. O cliente cria conta e faz login para agendar, o que permite manter histórico de visitas, recompra e dados de contato. Validação e *rate limiting* contra abuso de cadastros. A página de login/cadastro do cliente é pública (sem login de staff).
 
 ## 12. Estratégia de persistência
 
